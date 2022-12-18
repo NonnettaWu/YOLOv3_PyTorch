@@ -1,6 +1,6 @@
 ## YOLOv3_PyTorch
 
-With Google Colab providing a plant for training, the repository was creted to use `YOLOv3` model to detect objects. The most codes are copied from `Bubbliiiing`. 
+With Google Colab provides a plant for training, the repository was creted to use `YOLOv3` model to detect objects. The most codes are copied from `Bubbliiiing`. 
 
 His repository: https://github.com/bubbliiiing
 
@@ -11,5 +11,11 @@ The running environments has been supported in requirements.txt.
 ```
 pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple -y
 ```
+
+`YOLOv3 Structure` is below:
+
+<img src="https://user-images.githubusercontent.com/86788385/208301651-949755aa-75fa-4230-86ba-b5cdded952ab.png" width="600">
+
+
 
 **Keep Learning!**
