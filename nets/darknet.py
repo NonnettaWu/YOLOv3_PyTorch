@@ -1,14 +1,7 @@
 import math
 from collections import OrderedDict
-
 import torch.nn as nn
 
-
-#---------------------------------------------------------------------#
-#   残差结构
-#   利用一个1x1卷积下降通道数，然后利用一个3x3卷积提取特征并且上升通道数
-#   最后接上一个残差边
-#---------------------------------------------------------------------#
 class BasicBlock(nn.Module):
     def __init__(self, inplanes, planes):
         super(BasicBlock, self).__init__()
@@ -38,25 +31,24 @@ class DarkNet(nn.Module):
     def __init__(self, layers):
         super(DarkNet, self).__init__()
         self.inplanes = 32
-        # 416,416,3 -> 416,416,32
+        # 640,640,3 -> 640,640,32
         self.conv1  = nn.Conv2d(3, self.inplanes, kernel_size=3, stride=1, padding=1, bias=False)
         self.bn1    = nn.BatchNorm2d(self.inplanes)
         self.relu1  = nn.LeakyReLU(0.1)
 
-        # 416,416,32 -> 208,208,64
+        # 640,640,32 -> 320,320,64
         self.layer1 = self._make_layer([32, 64], layers[0])
-        # 208,208,64 -> 104,104,128
+        # 320,320,64 -> 160,160,128
         self.layer2 = self._make_layer([64, 128], layers[1])
-        # 104,104,128 -> 52,52,256
+        # 160,160,128 -> 80,80,256
         self.layer3 = self._make_layer([128, 256], layers[2])
-        # 52,52,256 -> 26,26,512
+        # 80,80,256 -> 40,40,512
         self.layer4 = self._make_layer([256, 512], layers[3])
-        # 26,26,512 -> 13,13,1024
+        # 40,40,512 -> 20,20,1024
         self.layer5 = self._make_layer([512, 1024], layers[4])
 
         self.layers_out_filters = [64, 128, 256, 512, 1024]
 
-        # 进行权值初始化
         for m in self.modules():
             if isinstance(m, nn.Conv2d):
                 n = m.kernel_size[0] * m.kernel_size[1] * m.out_channels
@@ -65,10 +57,6 @@ class DarkNet(nn.Module):
                 m.weight.data.fill_(1)
                 m.bias.data.zero_()
 
-    #---------------------------------------------------------------------#
-    #   在每一个layer里面，首先利用一个步长为2的3x3卷积进行下采样
-    #   然后进行残差结构的堆叠
-    #---------------------------------------------------------------------#
     def _make_layer(self, planes, blocks):
         layers = []
         # 下采样，步长为2，卷积核大小为3
